@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="SGA_API/SGA_API.csproj" />
+  <Project Path="SGA_WEB/SGA_WEB.csproj" />
+</Solution>
