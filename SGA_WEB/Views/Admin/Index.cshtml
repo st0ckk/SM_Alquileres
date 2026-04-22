@@ -1,0 +1,221 @@
+@model SGA_WEB.Models.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Panel Admin";
+    Layout = "_Layout";
+    var activeTab = (ViewBag.ActiveTab as string) ?? "citas";
+}
+
+<div class="properties section" style="padding-top: 140px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-heading mb-4">
+                    <h6>| Administracion</h6>
+                    <h2>Panel Administrativo</h2>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <ul class="nav nav-pills mb-4" id="admin-tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link @(activeTab == "citas" ? "active" : "")" id="citas-tab" data-bs-toggle="pill" data-bs-target="#citas-pane" type="button" role="tab">Citas</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link @(activeTab == "clientes" ? "active" : "")" id="clientes-tab" data-bs-toggle="pill" data-bs-target="#clientes-pane" type="button" role="tab">Clientes</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link @(activeTab == "mensajes" ? "active" : "")" id="mensajes-tab" data-bs-toggle="pill" data-bs-target="#mensajes-pane" type="button" role="tab">Mensajes</button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="admin-tabs-content">
+                    <div class="tab-pane fade @(activeTab == "citas" ? "show active" : "")" id="citas-pane" role="tabpanel" aria-labelledby="citas-tab">
+                        @if (TempData["Success"] is not null)
+                        {
+                            <div class="alert alert-success">@TempData["Success"]</div>
+                        }
+                        @if (TempData["Error"] is not null)
+                        {
+                            <div class="alert alert-danger">@TempData["Error"]</div>
+                        }
+                        <form method="get" asp-controller="Admin" asp-action="Index" class="row g-3 mb-3" style="background:#fff;border-radius:10px;padding:15px;">
+                            <input type="hidden" name="tab" value="citas" />
+                            <div class="col-lg-3">
+                                <label class="form-label">Desde</label>
+                                <input type="date" class="form-control" name="fechaDesde" value="@(Model.FechaDesde?.ToString("yyyy-MM-dd"))" />
+                            </div>
+                            <div class="col-lg-3">
+                                <label class="form-label">Hasta</label>
+                                <input type="date" class="form-control" name="fechaHasta" value="@(Model.FechaHasta?.ToString("yyyy-MM-dd"))" />
+                            </div>
+                            <div class="col-lg-3">
+                                <label class="form-label">Estado</label>
+                                <select class="form-select" name="estado">
+                                    <option value="">Todos</option>
+                                    @if (Model.Estado == "PENDIENTE")
+                                    {
+                                        <option value="PENDIENTE" selected>Pendiente</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="PENDIENTE">Pendiente</option>
+                                    }
+                                    @if (Model.Estado == "CONFIRMADA")
+                                    {
+                                        <option value="CONFIRMADA" selected>Confirmada</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="CONFIRMADA">Confirmada</option>
+                                    }
+                                    @if (Model.Estado == "CANCELADA")
+                                    {
+                                        <option value="CANCELADA" selected>Cancelada</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="CANCELADA">Cancelada</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-lg-3 d-flex align-items-end gap-2">
+                                <button type="submit" class="btn btn-primary">Filtrar</button>
+                                <a asp-controller="Admin" asp-action="Index" asp-route-tab="citas" class="btn btn-outline-secondary">Limpiar</a>
+                            </div>
+                        </form>
+                        <div class="table-responsive" style="background:#fff;border-radius:10px;padding:15px;">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Cliente</th>
+                                        <th>Email</th>
+                                        <th>Telefono</th>
+                                        <th>Propiedad</th>
+                                        <th>Fecha Visita</th>
+                                        <th>Estado</th>
+                                        <th>Accion</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var c in Model.Citas)
+                                    {
+                                        <tr>
+                                            <td>@c.Cliente</td>
+                                            <td>@c.Email</td>
+                                            <td>@c.Telefono</td>
+                                            <td>@c.PropiedadInteres</td>
+                                            <td>@c.FechaVisita.ToString("dd/MM/yyyy HH:mm")</td>
+                                            <td>@c.Estado</td>
+                                            <td>
+                                                <form asp-controller="Admin" asp-action="UpdateCitaEstado" method="post" class="d-flex gap-2 align-items-center">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="idCita" value="@c.IdCita" />
+                                                    <select name="estado" class="form-select form-select-sm">
+                                                        @if (c.Estado == "PENDIENTE")
+                                                        {
+                                                            <option value="PENDIENTE" selected>PENDIENTE</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="PENDIENTE">PENDIENTE</option>
+                                                        }
+                                                        @if (c.Estado == "APROBADA")
+                                                        {
+                                                            <option value="APROBADA" selected>APROBADA</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="APROBADA">APROBADA</option>
+                                                        }
+                                                        @if (c.Estado == "CANCELADA")
+                                                        {
+                                                            <option value="CANCELADA" selected>CANCELADA</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="CANCELADA">CANCELADA</option>
+                                                        }
+                                                    </select>
+                                                    <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            @if (!Model.Citas.Any())
+                            {
+                                <p class="mb-0">No hay citas con los filtros seleccionados.</p>
+                            }
+                        </div>
+                    </div>
+                    <div class="tab-pane fade @(activeTab == "clientes" ? "show active" : "")" id="clientes-pane" role="tabpanel" aria-labelledby="clientes-tab">
+                        <div class="table-responsive mb-4" style="background:#fff;border-radius:10px;padding:15px;">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Cédula</th>
+                                        <th>Email</th>
+                                        <th>Telefono</th>
+                                        <th>Fecha Registro</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var c in Model.Clientes)
+                                    {
+                                        <tr>
+                                            <td>@c.NombreCompleto</td>
+                                            <td>@c.Cedula</td>
+                                            <td>@c.Email</td>
+                                            <td>@c.Telefono</td>
+                                            <td>@c.FechaRegistro.ToString("dd/MM/yyyy HH:mm")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            @if (!Model.Clientes.Any())
+                            {
+                                <p class="mb-0">No hay clientes registrados.</p>
+                            }
+                        </div>
+                    </div>
+                    <div class="tab-pane fade @(activeTab == "mensajes" ? "show active" : "")" id="mensajes-pane" role="tabpanel" aria-labelledby="mensajes-tab">
+                        <div class="table-responsive" style="background:#fff;border-radius:10px;padding:15px;">
+                            <h5>Mensajes de Contacto</h5>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Cliente</th>
+                                        <th>Cédula</th>
+                                        <th>Email</th>
+                                        <th>Telefono</th>
+                                        <th>Asunto</th>
+                                        <th>Mensaje</th>
+                                        <th>Fecha</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var m in Model.Mensajes)
+                                    {
+                                        <tr>
+                                            <td>@m.NombreCompleto</td>
+                                            <td>@m.Cedula</td>
+                                            <td>@m.Email</td>
+                                            <td>@m.Telefono</td>
+                                            <td>@m.Asunto</td>
+                                            <td>@m.Mensaje</td>
+                                            <td>@m.FechaRegistro.ToString("dd/MM/yyyy HH:mm")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            @if (!Model.Mensajes.Any())
+                            {
+                                <p class="mb-0">No hay mensajes de contacto.</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,7 @@
 <Solution>
+  <Project Path="SGA.Infrastructure/SGA.Infrastructure.csproj" />
   <Project Path="SGA_API/SGA_API.csproj" />
-  <Project Path="SGA_WEB/SGA_WEB.csproj" />
+  <Project Path="SGA_WEB/SGA_WEB.csproj">
+    <BuildDependency Project="SGA_API/SGA_API.csproj" />
+  </Project>
 </Solution>

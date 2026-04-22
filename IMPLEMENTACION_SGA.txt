@@ -1,0 +1,117 @@
+1) ARQUITECTURA Y BASE ACTUAL
+- Solucion separada en:
+  - SGA_WEB (MVC + Razor + Bootstrap)
+  - SGA_API (Web API)
+  - SGA.Infrastructure (Dapper, inicializacion BD, logica compartida)
+- Base de datos SQL Server: ProyectoAlquileres.
+- La BD se crea y se inicializa automaticamente al ejecutar WEB o API.
+- Se usa script SQL base + creacion idempotente de tablas/SP de soporte.
+
+2) SEGURIDAD Y USUARIOS
+- Login/Logout con sesion (UsuarioEmail, UsuarioRol).
+- Usuario admin de pruebas forzado en inicializacion:
+  - email: admin@gmail.com
+  - password: 123456
+  - password almacenado con hash BCrypt.
+- Registro de cliente con validaciones y hash BCrypt.
+- Cedula validada en formato x-xxxx-xxxx y normalizada automaticamente.
+
+3) FUNCIONALIDAD DE NEGOCIO IMPLEMENTADA
+- Contacto:
+  - Formulario publico conectado a BD.
+  - Guarda mensajes y muestra confirmacion.
+- Citas:
+  - Formulario de agendamiento conectado a BD.
+  - Estados de cita administrables desde panel admin.
+- Panel Admin:
+  - Pestanas separadas: Citas, Clientes, Mensajes.
+  - Filtros por fecha/estado para citas.
+  - Clientes muestra solo registrados formalmente.
+- Cliente autenticado:
+  - Vista de notificaciones con estado de citas.
+  - Modulo de mensajes corto (asunto + mensaje).
+
+4) API Y DATOS
+- API con CORS habilitado para WEB.
+- Endpoint para buscar por cedula via API interna:
+  - GET api/personas/cedula/{cedula}
+- Acceso a datos con Dapper + stored procedures.
+
+5) CAMBIO NUEVO #1 (SOLICITADO): REGISTRO DE ERRORES DEL SISTEMA EN BD
+- Se creo middleware global de excepciones no controladas:
+  - SGA.Infrastructure/Middleware/ExceptionLoggingMiddleware.cs
+- Se agrego SP:
+  - sp_RegistrarErrorSistema
+- Flujo:
+  - Si ocurre excepcion no controlada, se registra en errores_sistema:
+    - codigo
+    - mensaje
+    - severidad
+    - id_usuario (si hay sesion/email asociable)
+- Middleware activado en:
+  - SGA_WEB/Program.cs
+  - SGA_API/Program.cs
+
+6) CAMBIO NUEVO #2 (SOLICITADO): CAMBIO Y RECUPERACION DE CONTRASENA
+- Nuevos modelos:
+  - CambiarContrasennaInputModel
+  - RecuperarContrasennaInputModel
+- Nuevas acciones en HomeController:
+  - GET/POST CambiarContrasenna (usuario logueado)
+  - GET/POST RecuperarContrasenna (flujo por email + cedula)
+- Nuevas vistas:
+  - Views/Home/CambiarContrasenna.cshtml
+  - Views/Home/RecuperarContrasenna.cshtml
+- Enlace desde login a recuperacion.
+- Enlace en layout autenticado a cambio de contrasena.
+- SP nuevos:
+  - sp_CambiarContrasennaPorEmail
+  - sp_ValidarClienteRecuperacion
+- ISgaDataService y SgaDataService extendidos para:
+  - validar recuperacion
+  - actualizar password hash
+  - registrar errores de sistema
+
+7) TABLAS/SP IMPORTANTES EN SOPORTE
+- Tablas soporte:
+  - clientes
+  - mensajes_contacto
+  - citas
+  - errores_sistema (del script base)
+- SP principales (entre otros):
+  - sp_ObtenerUsuarioPorEmail
+  - sp_ActualizarHashUsuario
+  - sp_RegistrarUsuarioCliente
+  - sp_RegistrarMensajeContacto
+  - sp_RegistrarMensajeCliente
+  - sp_AgendarCita
+  - sp_ListarClientes
+  - sp_ListarCitas
+  - sp_ActualizarEstadoCita
+  - sp_ListarMensajesContacto
+  - sp_ListarCitasPorClienteEmail
+  - sp_BuscarClientePorCedula
+  - sp_RegistrarErrorSistema
+  - sp_CambiarContrasennaPorEmail
+  - sp_ValidarClienteRecuperacion
+
+8) FLUJO FUNCIONAL ESPERADO (RESUMEN)
+- Visitante:
+  - Puede registrarse, enviar mensaje, agendar cita.
+- Cliente:
+  - Inicia sesion, ve notificaciones de citas, envia mensajes simples, cambia contrasena.
+- Admin:
+  - Inicia sesion, entra a Panel Admin, revisa clientes/citas/mensajes, cambia estado de citas.
+- Si ocurre error no controlado:
+  - Queda trazabilidad en errores_sistema.
+
+9) VALIDACION TECNICA RECIENTE
+- Build SGA_WEB: OK (0 errores)
+- Build SGA_API: OK (0 errores)
+- Sin errores de linter reportados en proyectos tocados.
+
+10) PENDIENTES RECOMENDADOS
+- Correo SMTP (si el equipo decide implementarlo despues).
+- Documento final IEEE y anexos finales (casos de uso + DER actualizado).
+- Pruebas de aceptacion completas por perfil (visitante/cliente/admin).
+

@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
+@using Microsoft.AspNetCore.Http
 <html lang="es">
 <head>
     <meta charset="utf-8">
@@ -17,6 +18,10 @@
 </head>
 
 <body>
+    @{
+        var usuarioEmail = Context.Session.GetString("UsuarioEmail");
+        var usuarioRol = Context.Session.GetString("UsuarioRol");
+    }
     <!-- ***** Preloader Start ***** -->
     <div id="js-preloader" class="js-preloader">
         <div class="preloader-inner">
@@ -67,7 +72,32 @@
                             <li><a asp-controller="Home" asp-action="Index" class="active">Inicio</a></li>
                             <li><a href="#propiedades">Propiedades</a></li>
                             <li><a href="#contacto">Contacto</a></li>
-                            <li><a asp-controller="Home" asp-action="Login"><i class="fa fa-user"></i> Iniciar Sesión</a></li>
+                            @if ((usuarioRol ?? string.Empty).ToUpperInvariant() == "ADMINISTRADOR")
+                            {
+                                <li><a asp-controller="Admin" asp-action="Index">Panel Admin</a></li>
+                            }
+                            else if (!string.IsNullOrWhiteSpace(usuarioEmail))
+                            {
+                                <li><a asp-controller="Cliente" asp-action="Notificaciones">Notificaciones</a></li>
+                                <li><a asp-controller="Cliente" asp-action="Mensajes">Mensajes</a></li>
+                            }
+                            @if (string.IsNullOrWhiteSpace(usuarioEmail))
+                            {
+                                <li><a asp-controller="Home" asp-action="Login"><i class="fa fa-user"></i> Iniciar Sesión</a></li>
+                            }
+                            else
+                            {
+                                <li><a href="#"><i class="fa fa-user"></i> @usuarioEmail</a></li>
+                                <li><a asp-controller="Home" asp-action="CambiarContrasenna">Cambiar Contraseña</a></li>
+                                <li style="display:flex;align-items:center;">
+                                    <form asp-controller="Home" asp-action="Logout" method="post" style="display:flex;align-items:center;margin:0;">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" style="background:none;border:none;padding:10px 0;color:#1e1e1e;font-weight:500;line-height:1;">
+                                            Cerrar Sesión
+                                        </button>
+                                    </form>
+                                </li>
+                            }
                         </ul>
                         <a class='menu-trigger'>
                             <span>Menu</span>
