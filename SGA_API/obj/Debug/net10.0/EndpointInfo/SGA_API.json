@@ -12,5 +12,33 @@
       "url": "http://localhost:5277"
     }
   ],
-  "paths": { }
+  "paths": {
+    "/api/Personas/cedula/{cedula}": {
+      "get": {
+        "tags": [
+          "Personas"
+        ],
+        "parameters": [
+          {
+            "name": "cedula",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Personas"
+    }
+  ]
 }

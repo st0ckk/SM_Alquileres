@@ -10,4 +10,6 @@ public class AdminDashboardViewModel
     public IReadOnlyList<CitaResumen> Citas { get; set; } = [];
     public IReadOnlyList<ClienteResumen> Clientes { get; set; } = [];
     public IReadOnlyList<MensajeResumen> Mensajes { get; set; } = [];
+    public IReadOnlyList<PropiedadListaItem> Propiedades { get; set; } = [];
+    public EditarPropiedadFormModel? FormularioEdicion { get; set; }
 }

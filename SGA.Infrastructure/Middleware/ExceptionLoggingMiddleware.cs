@@ -30,7 +30,6 @@ public class ExceptionLoggingMiddleware
             }
             catch
             {
-                // La API no usa sesión, se registra sin usuario.
             }
             var code = $"EX-{DateTime.UtcNow:yyyyMMddHHmmss}";
             var detail = $"{ex.Message} | {ex.StackTrace}";

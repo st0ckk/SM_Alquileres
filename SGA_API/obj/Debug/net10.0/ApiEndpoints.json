@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "ContainingType": "SGA_API.Controllers.PersonasController",
+    "Method": "BuscarPorCedula",
+    "RelativePath": "api/Personas/cedula/{cedula}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "cedula",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

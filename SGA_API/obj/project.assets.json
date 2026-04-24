@@ -943,17 +943,17 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\JuanGuillen\\AppData\\Local\\Temp\\cursor-sandbox-cache\\da03247b1acb538c889f964ef4ecb29c\\nuget": {},
+    "C:\\Users\\JuanGuillen\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\JuanGuillen\\Documents\\Proyectos\\SGA_Main\\SGA_Main\\SGA_API\\SGA_API.csproj",
+      "projectUniqueName": "C:\\Users\\JuanGuillen\\Documents\\Proyectos\\SGA_Main\\SGA_API\\SGA_API.csproj",
       "projectName": "SGA_API",
-      "projectPath": "C:\\Users\\JuanGuillen\\Documents\\Proyectos\\SGA_Main\\SGA_Main\\SGA_API\\SGA_API.csproj",
-      "packagesPath": "C:\\Users\\JuanGuillen\\AppData\\Local\\Temp\\cursor-sandbox-cache\\da03247b1acb538c889f964ef4ecb29c\\nuget",
-      "outputPath": "C:\\Users\\JuanGuillen\\Documents\\Proyectos\\SGA_Main\\SGA_Main\\SGA_API\\obj\\",
+      "projectPath": "C:\\Users\\JuanGuillen\\Documents\\Proyectos\\SGA_Main\\SGA_API\\SGA_API.csproj",
+      "packagesPath": "C:\\Users\\JuanGuillen\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\JuanGuillen\\Documents\\Proyectos\\SGA_Main\\SGA_API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -975,8 +975,8 @@
         "net10.0": {
           "targetAlias": "net10.0",
           "projectReferences": {
-            "C:\\Users\\JuanGuillen\\Documents\\Proyectos\\SGA_Main\\SGA_Main\\SGA.Infrastructure\\SGA.Infrastructure.csproj": {
-              "projectPath": "C:\\Users\\JuanGuillen\\Documents\\Proyectos\\SGA_Main\\SGA_Main\\SGA.Infrastructure\\SGA.Infrastructure.csproj"
+            "C:\\Users\\JuanGuillen\\Documents\\Proyectos\\SGA_Main\\SGA.Infrastructure\\SGA.Infrastructure.csproj": {
+              "projectPath": "C:\\Users\\JuanGuillen\\Documents\\Proyectos\\SGA_Main\\SGA.Infrastructure\\SGA.Infrastructure.csproj"
             }
           }
         }
@@ -991,7 +991,7 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "10.0.100"
+      "SdkAnalysisLevel": "10.0.200"
     },
     "frameworks": {
       "net10.0": {
@@ -1021,7 +1021,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.102/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

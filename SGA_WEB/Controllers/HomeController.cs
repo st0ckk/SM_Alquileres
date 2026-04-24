@@ -8,18 +8,53 @@ namespace SGA_WEB.Controllers
     public class HomeController : Controller
     {
         private readonly ISgaDataService _sgaDataService;
+        private readonly IEmailNotificationService _emailNotificationService;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ISgaDataService sgaDataService, ILogger<HomeController> logger)
+        public HomeController(
+            ISgaDataService sgaDataService,
+            IEmailNotificationService emailNotificationService,
+            ILogger<HomeController> logger)
         {
             _sgaDataService = sgaDataService;
+            _emailNotificationService = emailNotificationService;
             _logger = logger;
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index(int? pagina)
         {
-            return View();
+            const int tamano = 10;
+            var p = pagina ?? 1;
+            if (p < 1)
+            {
+                p = 1;
+            }
+
+            var (items, total) = await _sgaDataService.GetPropiedadesActivasPaginadoAsync(p, tamano);
+            var totalPaginas = tamano <= 0 ? 0 : (int)Math.Ceiling(total / (double)tamano);
+            if (totalPaginas > 0 && p > totalPaginas)
+            {
+                p = totalPaginas;
+                (items, total) = await _sgaDataService.GetPropiedadesActivasPaginadoAsync(p, tamano);
+            }
+
+            int? idPropiedadCita = null;
+            if (int.TryParse(Request.Query["idPropiedad"], out var idp) && idp > 0)
+            {
+                idPropiedadCita = idp;
+            }
+
+            var vm = new HomeIndexViewModel
+            {
+                Propiedades = items,
+                PropiedadSeleccionadaQuery = Request.Query["propiedad"].ToString(),
+                IdPropiedadParaCita = idPropiedadCita,
+                PaginaActual = p,
+                TotalRegistros = total,
+                TamanoPagina = tamano
+            };
+            return View(vm);
         }
 
         [HttpGet]
@@ -55,7 +90,7 @@ namespace SGA_WEB.Controllers
 
                 HttpContext.Session.SetString("UsuarioEmail", loginResult.Email);
                 HttpContext.Session.SetString("UsuarioRol", loginResult.Rol);
-                TempData["Success"] = "Sesion iniciada correctamente.";
+                HttpContext.Session.SetString("UsuarioNombre", loginResult.NombreCompleto);
                 return RedirectToAction("Index", "Home");
             }
             catch (Exception ex)
@@ -71,7 +106,6 @@ namespace SGA_WEB.Controllers
         public IActionResult Logout()
         {
             HttpContext.Session.Clear();
-            TempData["Success"] = "Sesion cerrada correctamente.";
             return RedirectToAction("Index");
         }
 
@@ -110,7 +144,7 @@ namespace SGA_WEB.Controllers
 
             await _sgaDataService.UpdatePasswordByEmailAsync(email, model.NuevaContrasenna);
             TempData["Success"] = "Contraseña actualizada correctamente.";
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(CambiarContrasenna));
         }
 
         [HttpGet]
@@ -150,6 +184,47 @@ namespace SGA_WEB.Controllers
             return View();
         }
 
+        [HttpGet]
+        public async Task<IActionResult> BuscarCedula(string cedula)
+        {
+            if (string.IsNullOrWhiteSpace(cedula))
+            {
+                return BadRequest();
+            }
+
+            var dato = await _sgaDataService.GetClientByCedulaAsync(cedula);
+            if (dato is null)
+            {
+                return NotFound();
+            }
+
+            var partes = (dato.NombreCompleto ?? string.Empty)
+                .Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            var nombre = partes.Length > 0 ? partes[0] : string.Empty;
+            var apellidos = partes.Length > 1 ? string.Join(" ", partes.Skip(1)) : string.Empty;
+
+            return Json(new
+            {
+                dato.Cedula,
+                Nombre = nombre,
+                Apellidos = apellidos,
+                dato.Telefono,
+                dato.Email
+            });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ValidarCorreo(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return BadRequest();
+            }
+
+            var exists = await _sgaDataService.EmailExistsAsync(email.Trim().ToLowerInvariant());
+            return Json(new { exists });
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Registro(Usuario modelo)
@@ -173,6 +248,19 @@ namespace SGA_WEB.Controllers
                 return View(modelo);
             }
 
+            var correoNormalizado = modelo.Email.Trim().ToLowerInvariant();
+            if (await _sgaDataService.CedulaExistsAsync(cedulaNormalizada))
+            {
+                ViewBag.Error = "Cédula ya existente.";
+                return View(modelo);
+            }
+
+            if (await _sgaDataService.EmailExistsAsync(correoNormalizado))
+            {
+                ViewBag.Error = "Correo ya existente.";
+                return View(modelo);
+            }
+
             try
             {
                 var fullName = $"{modelo.Nombre} {modelo.Apellidos}".Trim();
@@ -180,7 +268,7 @@ namespace SGA_WEB.Controllers
                     fullName,
                     cedulaNormalizada,
                     modelo.Telefono.Trim(),
-                    modelo.Email.Trim().ToLowerInvariant(),
+                    correoNormalizado,
                     modelo.Contrasenna);
                 if (!ok)
                 {
@@ -188,8 +276,8 @@ namespace SGA_WEB.Controllers
                     return View(modelo);
                 }
 
-                ViewBag.Success = "¡Registro exitoso! Ya puede iniciar sesión con sus credenciales.";
-                return View();
+                TempData["Success"] = "Registro exitoso. Ya puede iniciar sesión con sus credenciales.";
+                return RedirectToAction("Login");
             }
             catch (Exception ex)
             {
@@ -223,25 +311,95 @@ namespace SGA_WEB.Controllers
             return Redirect("/Home/Index#contacto");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> HorariosCitaDisponibles(string propiedad, DateTime fecha, int? idPropiedad = null)
+        {
+            if (string.IsNullOrWhiteSpace(propiedad))
+            {
+                return Json(new { horasDisponibles = Array.Empty<int>() });
+            }
+
+            var idProp = idPropiedad is > 0 ? idPropiedad : null;
+
+            var fechaDia = fecha.Date;
+            if (fechaDia < DateTime.Today || !EsDiaPermitidoCita(fechaDia))
+            {
+                return Json(new { horasDisponibles = Array.Empty<int>() });
+            }
+
+            var ocupadas = await _sgaDataService.GetHorasOcupadasCitaAsync(propiedad.Trim(), fechaDia, idProp);
+            var setOcup = ocupadas.ToHashSet();
+            var todas = Enumerable.Range(8, 10);
+            var disponibles = todas.Where(h => !setOcup.Contains(h)).ToList();
+
+            if (fechaDia == DateTime.Today)
+            {
+                disponibles = disponibles
+                    .Where(h => new DateTime(fechaDia.Year, fechaDia.Month, fechaDia.Day, h, 0, 0, DateTimeKind.Local) > DateTime.Now)
+                    .ToList();
+            }
+
+            return Json(new { horasDisponibles = disponibles });
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AgendarCita(CitaInputModel model)
         {
             if (!ModelState.IsValid)
             {
-                TempData["Error"] = "Complete correctamente el formulario de cita.";
+                TempData["CitaError"] = "Complete correctamente el formulario de cita.";
+                return Redirect("/Home/Index#agendar-cita");
+            }
+
+            var propiedad = model.PropiedadInteres.Trim();
+            var fechaVisita = DateTime.SpecifyKind(
+                model.FechaCita.Date.AddHours(model.HoraCita),
+                DateTimeKind.Unspecified);
+
+            if (!EsDiaPermitidoCita(fechaVisita) || !EsHoraPermitidaCita(model.HoraCita))
+            {
+                TempData["CitaError"] = "Las visitas solo se agendan de lunes a sábado, entre las 8:00 y las 17:00.";
+                return Redirect("/Home/Index#agendar-cita");
+            }
+
+            if (fechaVisita.Date < DateTime.Today || fechaVisita <= DateTime.Now)
+            {
+                TempData["CitaError"] = "Seleccione una fecha y hora futuras.";
                 return Redirect("/Home/Index#agendar-cita");
             }
 
             try
             {
-                await _sgaDataService.ScheduleAppointmentAsync(
+                var idPropCita = model.IdPropiedadCita is > 0 ? model.IdPropiedadCita : null;
+                var ok = await _sgaDataService.ScheduleAppointmentAsync(
                     model.NombreCompleto,
                     model.Email.Trim().ToLowerInvariant(),
                     model.Telefono,
-                    model.FechaVisita,
-                    model.PropiedadInteres,
-                    model.Mensaje);
+                    fechaVisita,
+                    propiedad,
+                    model.Mensaje,
+                    idPropCita);
+
+                if (!ok)
+                {
+                    TempData["CitaError"] = "Ese horario ya está reservado para esta propiedad. Elija otro horario disponible.";
+                    return Redirect("/Home/Index#agendar-cita");
+                }
+
+                try
+                {
+                    await _emailNotificationService.SendAppointmentEmailAsync(
+                        model.Email.Trim().ToLowerInvariant(),
+                        model.NombreCompleto,
+                        fechaVisita,
+                        propiedad);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "No se pudo enviar correo de cita a {Email}.", model.Email);
+                    TempData["CitaWarning"] = "La cita se registró, pero no se pudo enviar el correo de confirmación.";
+                }
 
                 TempData["CitaSuccess"] = "Solicitud enviada correctamente.";
             }
@@ -253,6 +411,12 @@ namespace SGA_WEB.Controllers
 
             return Redirect("/Home/Index#agendar-cita");
         }
+
+        private static bool EsDiaPermitidoCita(DateTime fecha) =>
+            fecha.DayOfWeek is not DayOfWeek.Sunday;
+
+        private static bool EsHoraPermitidaCita(int hora) =>
+            hora is >= 8 and <= 17;
 
         private static string NormalizeCedula(string? input)
         {
