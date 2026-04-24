@@ -850,23 +850,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\JuanGuillen\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\Stock\\.nuget\\packages\\": {},
+    "T:\\VisualStudio\\VisualStudio - Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\JuanGuillen\\Documents\\Proyectos\\SGA_Main\\SGA.Infrastructure\\SGA.Infrastructure.csproj",
+      "projectUniqueName": "T:\\Documents\\Universidad\\7to cuatr\\PrograAvanzada\\VSCode\\SM_Alquileres\\SGA.Infrastructure\\SGA.Infrastructure.csproj",
       "projectName": "SGA.Infrastructure",
-      "projectPath": "C:\\Users\\JuanGuillen\\Documents\\Proyectos\\SGA_Main\\SGA.Infrastructure\\SGA.Infrastructure.csproj",
-      "packagesPath": "C:\\Users\\JuanGuillen\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\JuanGuillen\\Documents\\Proyectos\\SGA_Main\\SGA.Infrastructure\\obj\\",
+      "projectPath": "T:\\Documents\\Universidad\\7to cuatr\\PrograAvanzada\\VSCode\\SM_Alquileres\\SGA.Infrastructure\\SGA.Infrastructure.csproj",
+      "packagesPath": "C:\\Users\\Stock\\.nuget\\packages\\",
+      "outputPath": "T:\\Documents\\Universidad\\7to cuatr\\PrograAvanzada\\VSCode\\SM_Alquileres\\SGA.Infrastructure\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        "T:\\VisualStudio\\VisualStudio - Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\JuanGuillen\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Stock\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -875,11 +875,11 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {}
         }
@@ -898,6 +898,7 @@
     },
     "frameworks": {
       "net10.0": {
+        "framework": "net10.0",
         "targetAlias": "net10.0",
         "dependencies": {
           "BCrypt.Net-Next": {
@@ -932,7 +933,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.202/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

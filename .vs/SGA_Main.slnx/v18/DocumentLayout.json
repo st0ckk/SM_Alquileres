@@ -1,9 +1,9 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\JuanGuillen\\Documents\\Proyectos\\SGA_Main\\",
+  "WorkspaceRootPath": "T:\\Documents\\Universidad\\7to cuatr\\PrograAvanzada\\VSCode\\SM_Alquileres\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{825C5042-0479-ACBA-CA56-04697E6174DB}|SGA_API\\SGA_API.csproj|c:\\users\\juanguillen\\documents\\proyectos\\sga_main\\sga_api\\sga_api.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
+      "AbsoluteMoniker": "D:0:0:{825C5042-0479-ACBA-CA56-04697E6174DB}|SGA_API\\SGA_API.csproj|t:\\documents\\universidad\\7to cuatr\\prograavanzada\\vscode\\sm_alquileres\\sga_api\\sga_api.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
       "RelativeMoniker": "D:0:0:{825C5042-0479-ACBA-CA56-04697E6174DB}|SGA_API\\SGA_API.csproj|solutionrelative:sga_api\\sga_api.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
     }
   ],
@@ -20,9 +20,9 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "SGA_API",
-              "DocumentMoniker": "C:\\Users\\JuanGuillen\\Documents\\Proyectos\\SGA_Main\\SGA_API\\SGA_API.csproj",
+              "DocumentMoniker": "T:\\Documents\\Universidad\\7to cuatr\\PrograAvanzada\\VSCode\\SM_Alquileres\\SGA_API\\SGA_API.csproj",
               "RelativeDocumentMoniker": "SGA_API\\SGA_API.csproj",
-              "ToolTip": "C:\\Users\\JuanGuillen\\Documents\\Proyectos\\SGA_Main\\SGA_API\\SGA_API.csproj",
+              "ToolTip": "T:\\Documents\\Universidad\\7to cuatr\\PrograAvanzada\\VSCode\\SM_Alquileres\\SGA_API\\SGA_API.csproj",
               "RelativeToolTip": "SGA_API\\SGA_API.csproj",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
               "WhenOpened": "2026-04-21T16:30:18.091Z",

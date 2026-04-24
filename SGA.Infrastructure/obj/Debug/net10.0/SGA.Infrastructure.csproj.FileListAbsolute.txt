@@ -22,3 +22,16 @@ C:\Users\JuanGuillen\Documents\Proyectos\SGA_Main\SGA.Infrastructure\obj\Debug\n
 C:\Users\JuanGuillen\Documents\Proyectos\SGA_Main\SGA.Infrastructure\obj\Debug\net10.0\refint\SGA.Infrastructure.dll
 C:\Users\JuanGuillen\Documents\Proyectos\SGA_Main\SGA.Infrastructure\obj\Debug\net10.0\SGA.Infrastructure.pdb
 C:\Users\JuanGuillen\Documents\Proyectos\SGA_Main\SGA.Infrastructure\obj\Debug\net10.0\ref\SGA.Infrastructure.dll
+T:\Documents\Universidad\7to cuatr\PrograAvanzada\VSCode\SM_Alquileres\SGA.Infrastructure\bin\Debug\net10.0\SGA.Infrastructure.deps.json
+T:\Documents\Universidad\7to cuatr\PrograAvanzada\VSCode\SM_Alquileres\SGA.Infrastructure\bin\Debug\net10.0\SGA.Infrastructure.dll
+T:\Documents\Universidad\7to cuatr\PrograAvanzada\VSCode\SM_Alquileres\SGA.Infrastructure\bin\Debug\net10.0\SGA.Infrastructure.pdb
+T:\Documents\Universidad\7to cuatr\PrograAvanzada\VSCode\SM_Alquileres\SGA.Infrastructure\obj\Debug\net10.0\SGA.Infrastructure.csproj.AssemblyReference.cache
+T:\Documents\Universidad\7to cuatr\PrograAvanzada\VSCode\SM_Alquileres\SGA.Infrastructure\obj\Debug\net10.0\SGA.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+T:\Documents\Universidad\7to cuatr\PrograAvanzada\VSCode\SM_Alquileres\SGA.Infrastructure\obj\Debug\net10.0\SGA.Infrastructure.AssemblyInfoInputs.cache
+T:\Documents\Universidad\7to cuatr\PrograAvanzada\VSCode\SM_Alquileres\SGA.Infrastructure\obj\Debug\net10.0\SGA.Infrastructure.AssemblyInfo.cs
+T:\Documents\Universidad\7to cuatr\PrograAvanzada\VSCode\SM_Alquileres\SGA.Infrastructure\obj\Debug\net10.0\SGA.Infrastructure.csproj.CoreCompileInputs.cache
+T:\Documents\Universidad\7to cuatr\PrograAvanzada\VSCode\SM_Alquileres\SGA.Infrastructure\obj\Debug\net10.0\SGA.Infrastructure.sourcelink.json
+T:\Documents\Universidad\7to cuatr\PrograAvanzada\VSCode\SM_Alquileres\SGA.Infrastructure\obj\Debug\net10.0\SGA.Infrastructure.dll
+T:\Documents\Universidad\7to cuatr\PrograAvanzada\VSCode\SM_Alquileres\SGA.Infrastructure\obj\Debug\net10.0\refint\SGA.Infrastructure.dll
+T:\Documents\Universidad\7to cuatr\PrograAvanzada\VSCode\SM_Alquileres\SGA.Infrastructure\obj\Debug\net10.0\SGA.Infrastructure.pdb
+T:\Documents\Universidad\7to cuatr\PrograAvanzada\VSCode\SM_Alquileres\SGA.Infrastructure\obj\Debug\net10.0\ref\SGA.Infrastructure.dll
