@@ -1,0 +1,438 @@
+@model SGA_WEB.Models.AdminDashboardViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "Panel Admin";
+    Layout = "_Layout";
+    var activeTab = (ViewBag.ActiveTab as string) ?? "citas";
+    var esCr = CultureInfo.GetCultureInfo("es-CR");
+}
+
+<div class="properties section sga-page-top">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-heading mb-4">
+                    <h6>| Administracion</h6>
+                    <h2>Panel Administrativo</h2>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                @if (TempData["Success"] is not null)
+                {
+                    <div class="alert alert-success">@TempData["Success"]</div>
+                }
+                @if (TempData["Error"] is not null)
+                {
+                    <div class="alert alert-danger">@TempData["Error"]</div>
+                }
+                <ul class="nav nav-pills mb-4" id="admin-tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link @(activeTab == "citas" ? "active" : "")" id="citas-tab" data-bs-toggle="pill" data-bs-target="#citas-pane" type="button" role="tab">Citas</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link @(activeTab == "clientes" ? "active" : "")" id="clientes-tab" data-bs-toggle="pill" data-bs-target="#clientes-pane" type="button" role="tab">Clientes</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link @(activeTab == "mensajes" ? "active" : "")" id="mensajes-tab" data-bs-toggle="pill" data-bs-target="#mensajes-pane" type="button" role="tab">Mensajes</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link @(activeTab == "propiedades" ? "active" : "")" id="propiedades-tab" data-bs-toggle="pill" data-bs-target="#propiedades-pane" type="button" role="tab">Propiedades</button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="admin-tabs-content">
+                    <div class="tab-pane fade @(activeTab == "citas" ? "show active" : "")" id="citas-pane" role="tabpanel" aria-labelledby="citas-tab">
+                        <form method="get" asp-controller="Admin" asp-action="Index" class="row g-3 mb-3 sga-panel">
+                            <input type="hidden" name="tab" value="citas" />
+                            <div class="col-lg-3">
+                                <label class="form-label">Desde</label>
+                                <input type="date" class="form-control" name="fechaDesde" value="@(Model.FechaDesde?.ToString("yyyy-MM-dd"))" />
+                            </div>
+                            <div class="col-lg-3">
+                                <label class="form-label">Hasta</label>
+                                <input type="date" class="form-control" name="fechaHasta" value="@(Model.FechaHasta?.ToString("yyyy-MM-dd"))" />
+                            </div>
+                            <div class="col-lg-3">
+                                <label class="form-label">Estado</label>
+                                <select class="form-select" name="estado">
+                                    <option value="">Todos</option>
+                                    @if (Model.Estado == "PENDIENTE")
+                                    {
+                                        <option value="PENDIENTE" selected>Pendiente</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="PENDIENTE">Pendiente</option>
+                                    }
+                                    @if (Model.Estado == "APROBADA")
+                                    {
+                                        <option value="APROBADA" selected>Aprobada</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="APROBADA">Aprobada</option>
+                                    }
+                                    @if (Model.Estado == "CANCELADA")
+                                    {
+                                        <option value="CANCELADA" selected>Cancelada</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="CANCELADA">Cancelada</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-lg-3 d-flex align-items-end gap-2">
+                                <button type="submit" class="btn btn-primary">Filtrar</button>
+                                <a asp-controller="Admin" asp-action="Index" asp-route-tab="citas" class="btn btn-outline-secondary">Limpiar</a>
+                            </div>
+                        </form>
+                        <div class="table-responsive sga-panel">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Cliente</th>
+                                        <th>Email</th>
+                                        <th>Telefono</th>
+                                        <th>Propiedad</th>
+                                        <th>Fecha Visita</th>
+                                        <th>Estado</th>
+                                        <th>Accion</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var c in Model.Citas)
+                                    {
+                                        <tr>
+                                            <td>@c.Cliente</td>
+                                            <td>@c.Email</td>
+                                            <td>@c.Telefono</td>
+                                            <td>@c.PropiedadInteres</td>
+                                            <td>@c.FechaVisita.ToString("dd/MM/yyyy HH:mm")</td>
+                                            <td>@c.Estado</td>
+                                            <td>
+                                                <form asp-controller="Admin" asp-action="UpdateCitaEstado" method="post" class="d-flex gap-2 align-items-center">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="idCita" value="@c.IdCita" />
+                                                    <select name="estado" class="form-select form-select-sm">
+                                                        @if (c.Estado == "PENDIENTE")
+                                                        {
+                                                            <option value="PENDIENTE" selected>PENDIENTE</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="PENDIENTE">PENDIENTE</option>
+                                                        }
+                                                        @if (c.Estado == "APROBADA")
+                                                        {
+                                                            <option value="APROBADA" selected>APROBADA</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="APROBADA">APROBADA</option>
+                                                        }
+                                                        @if (c.Estado == "CANCELADA")
+                                                        {
+                                                            <option value="CANCELADA" selected>CANCELADA</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="CANCELADA">CANCELADA</option>
+                                                        }
+                                                    </select>
+                                                    <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            @if (!Model.Citas.Any())
+                            {
+                                <p class="mb-0">No hay citas con los filtros seleccionados.</p>
+                            }
+                        </div>
+                    </div>
+                    <div class="tab-pane fade @(activeTab == "clientes" ? "show active" : "")" id="clientes-pane" role="tabpanel" aria-labelledby="clientes-tab">
+                        <div class="table-responsive mb-4 sga-panel">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Cédula</th>
+                                        <th>Email</th>
+                                        <th>Telefono</th>
+                                        <th>Fecha Registro</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var c in Model.Clientes)
+                                    {
+                                        <tr>
+                                            <td>@c.NombreCompleto</td>
+                                            <td>@c.Cedula</td>
+                                            <td>@c.Email</td>
+                                            <td>@c.Telefono</td>
+                                            <td>@c.FechaRegistro.ToString("dd/MM/yyyy HH:mm")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            @if (!Model.Clientes.Any())
+                            {
+                                <p class="mb-0">No hay clientes registrados.</p>
+                            }
+                        </div>
+                    </div>
+                    <div class="tab-pane fade @(activeTab == "mensajes" ? "show active" : "")" id="mensajes-pane" role="tabpanel" aria-labelledby="mensajes-tab">
+                        <div class="table-responsive sga-panel">
+                            <h5>Mensajes de Contacto</h5>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Cliente</th>
+                                        <th>Cédula</th>
+                                        <th>Email</th>
+                                        <th>Telefono</th>
+                                        <th>Asunto</th>
+                                        <th>Mensaje</th>
+                                        <th>Fecha</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var m in Model.Mensajes)
+                                    {
+                                        <tr>
+                                            <td>@m.NombreCompleto</td>
+                                            <td>@m.Cedula</td>
+                                            <td>@m.Email</td>
+                                            <td>@m.Telefono</td>
+                                            <td>@m.Asunto</td>
+                                            <td>@m.Mensaje</td>
+                                            <td>@m.FechaRegistro.ToString("dd/MM/yyyy HH:mm")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            @if (!Model.Mensajes.Any())
+                            {
+                                <p class="mb-0">No hay mensajes de contacto.</p>
+                            }
+                        </div>
+                    </div>
+                    <div class="tab-pane fade @(activeTab == "propiedades" ? "show active" : "")" id="propiedades-pane" role="tabpanel" aria-labelledby="propiedades-tab">
+                        <div class="row g-4">
+                            <div class="col-lg-5">
+                                <div class="sga-panel p-4">
+                                    @if (Model.FormularioEdicion is not null)
+                                    {
+                                        var e = Model.FormularioEdicion;
+                                        <h5 class="mb-3">Editar propiedad #@e.IdPropiedad</h5>
+                                        <p class="text-muted small mb-3">Si cambia tipo o ubicación, el texto de cita (<strong>Ref … - Tipo - Ubicación</strong>) cambia: los clientes deben usar el nuevo texto para ver horarios coherentes.</p>
+                                        <form asp-controller="Admin" asp-action="ActualizarPropiedad" method="post" enctype="multipart/form-data" class="row g-3">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="IdPropiedad" value="@e.IdPropiedad" />
+                                            <input type="hidden" name="UrlFotoActual" value="@e.UrlFotoActual" />
+                                            <div class="col-12">
+                                                <label class="form-label">Tipo</label>
+                                                <select class="form-select" name="Tipo" required>
+                                                    @foreach (var t in new[] { "Apartamento", "Casa", "Villa" })
+                                                    {
+                                                        if (string.Equals(e.Tipo, t, StringComparison.OrdinalIgnoreCase))
+                                                        {
+                                                            <option value="@t" selected>@t</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@t">@t</option>
+                                                        }
+                                                    }
+                                                </select>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label">Ubicación</label>
+                                                <input type="text" class="form-control" name="Ubicacion" maxlength="200" required value="@e.Ubicacion" />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Precio mensual (USD)</label>
+                                                <input type="text" class="form-control" name="PrecioMensualTexto" inputmode="decimal" autocomplete="off" required value="@e.PrecioMensualTexto" placeholder="Ej. 1500 o 1500,00" />
+                                                <small class="text-muted">Formato Costa Rica: miles con punto y decimales con coma (ej. 1.500,00). También acepta 1500.50.</small>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Espacio total (m²)</label>
+                                                <input type="number" min="0" class="form-control" name="EspacioTotalM2" value="@e.EspacioTotalM2" />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Número de piso</label>
+                                                <input type="text" class="form-control" name="NumeroPiso" maxlength="40" value="@e.NumeroPiso" />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Habitaciones</label>
+                                                <input type="number" min="1" max="50" class="form-control" name="NumeroHabitaciones" value="@e.NumeroHabitaciones" />
+                                            </div>
+                                            <div class="col-12">
+                                                <input type="hidden" name="EstacionamientoDisponible" value="false" />
+                                                <div class="form-check">
+                                                    @if (e.EstacionamientoDisponible)
+                                                    {
+                                                        <input class="form-check-input" type="checkbox" name="EstacionamientoDisponible" value="true" id="chkEstEdit" checked />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input class="form-check-input" type="checkbox" name="EstacionamientoDisponible" value="true" id="chkEstEdit" />
+                                                    }
+                                                    <label class="form-check-label" for="chkEstEdit">Estacionamiento disponible</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label">Proceso de pago</label>
+                                                <input type="text" class="form-control" name="ProcesoPago" maxlength="80" value="@e.ProcesoPago" />
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label">Información extra</label>
+                                                <textarea class="form-control" name="Descripcion" rows="4" maxlength="2000" required>@e.Descripcion</textarea>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label">Nueva foto (opcional; JPG, PNG o WEBP, máx. 5 MB)</label>
+                                                <input type="file" class="form-control" name="Foto" accept=".jpg,.jpeg,.png,.webp" />
+                                            </div>
+                                            <div class="col-12 d-flex flex-wrap gap-2">
+                                                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                                                <a asp-controller="Admin" asp-action="Index" asp-route-tab="propiedades" class="btn btn-outline-secondary">Cancelar edición</a>
+                                            </div>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <h5 class="mb-3">Nueva propiedad</h5>
+                                        <p class="text-muted small mb-3">Los clientes verán esta información en la página de inicio y podrán agendar visita; el texto de propiedad debe coincidir con el que se guarda en la cita (referencia + tipo + ubicación).</p>
+                                        <form asp-controller="Admin" asp-action="CrearPropiedad" method="post" enctype="multipart/form-data" class="row g-3">
+                                            @Html.AntiForgeryToken()
+                                            <div class="col-12">
+                                                <label class="form-label">Tipo</label>
+                                                <select class="form-select" name="Tipo" required>
+                                                    <option value="Apartamento">Apartamento</option>
+                                                    <option value="Casa">Casa</option>
+                                                    <option value="Villa">Villa</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label">Ubicación</label>
+                                                <input type="text" class="form-control" name="Ubicacion" maxlength="200" required placeholder="Ej. San José, Barrio Escalante" />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Precio mensual (USD)</label>
+                                                <input type="text" class="form-control" name="PrecioMensualTexto" inputmode="decimal" autocomplete="off" required placeholder="Ej. 1500 o 1500,00" />
+                                                <small class="text-muted">Use coma o punto; al editar verá siempre dos decimales (ej. 1.500,00).</small>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Espacio total (m²)</label>
+                                                <input type="number" min="0" class="form-control" name="EspacioTotalM2" value="0" />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Número de piso</label>
+                                                <input type="text" class="form-control" name="NumeroPiso" maxlength="40" value="N/A" />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Habitaciones</label>
+                                                <input type="number" min="1" max="50" class="form-control" name="NumeroHabitaciones" value="1" />
+                                            </div>
+                                            <div class="col-12">
+                                                <input type="hidden" name="EstacionamientoDisponible" value="false" />
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="EstacionamientoDisponible" value="true" id="chkEst" checked />
+                                                    <label class="form-check-label" for="chkEst">Estacionamiento disponible</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label">Proceso de pago</label>
+                                                <input type="text" class="form-control" name="ProcesoPago" maxlength="80" value="Banco" placeholder="Ej. Banco, transferencia, efectivo" />
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label">Información extra</label>
+                                                <textarea class="form-control" name="Descripcion" rows="4" maxlength="2000" required placeholder="Descripción para el cliente"></textarea>
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label">Foto (JPG, PNG o WEBP, máx. 5 MB)</label>
+                                                <input type="file" class="form-control" name="Foto" accept=".jpg,.jpeg,.png,.webp" />
+                                            </div>
+                                            <div class="col-12">
+                                                <button type="submit" class="btn btn-primary">Guardar propiedad</button>
+                                            </div>
+                                        </form>
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-lg-7">
+                                <div class="table-responsive sga-panel">
+                                    <h5 class="mb-3">Propiedades registradas</h5>
+                                    <p class="text-muted small">Las <strong>desactivadas</strong> no se muestran en el inicio público; puede reactivarlas si vuelven a estar disponibles.</p>
+                                    <table class="table table-striped table-sm align-middle">
+                                        <thead>
+                                            <tr>
+                                                <th>Ref</th>
+                                                <th>Estado</th>
+                                                <th>Tipo</th>
+                                                <th>Ubicación</th>
+                                                <th>Precio</th>
+                                                <th>Texto cita</th>
+                                                <th class="text-end">Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var p in Model.Propiedades)
+                                            {
+                                                var activa = p.Disponible == true;
+                                                <tr class="@(!activa ? "table-secondary" : null)">
+                                                    <td>@p.IdPropiedad</td>
+                                                    <td>
+                                                        @if (activa)
+                                                        {
+                                                            <span class="badge bg-success">Visible</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="badge bg-secondary">Oculta</span>
+                                                        }
+                                                    </td>
+                                                    <td>@p.Tipo</td>
+                                                    <td>@p.Ubicacion</td>
+                                                    <td>@p.PrecioMensual.ToString("N2", esCr)</td>
+                                                    <td><small>@p.TextoPropiedadInteres</small></td>
+                                                    <td class="text-end text-nowrap">
+                                                        <a class="btn btn-sm btn-outline-primary" asp-controller="Admin" asp-action="Index" asp-route-tab="propiedades" asp-route-editar="@p.IdPropiedad">Editar</a>
+                                                        @if (activa)
+                                                        {
+                                                            <form asp-controller="Admin" asp-action="SetPropiedadDisponible" method="post" class="d-inline">
+                                                                @Html.AntiForgeryToken()
+                                                                <input type="hidden" name="idPropiedad" value="@p.IdPropiedad" />
+                                                                <input type="hidden" name="disponible" value="false" />
+                                                                <button type="submit" class="btn btn-sm btn-outline-warning">Desactivar</button>
+                                                            </form>
+                                                        }
+                                                        else
+                                                        {
+                                                            <form asp-controller="Admin" asp-action="SetPropiedadDisponible" method="post" class="d-inline">
+                                                                @Html.AntiForgeryToken()
+                                                                <input type="hidden" name="idPropiedad" value="@p.IdPropiedad" />
+                                                                <input type="hidden" name="disponible" value="true" />
+                                                                <button type="submit" class="btn btn-sm btn-outline-success">Reactivar</button>
+                                                            </form>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                    @if (!Model.Propiedades.Any())
+                                    {
+                                        <p class="mb-0">No hay propiedades. Cree la primera con el formulario.</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

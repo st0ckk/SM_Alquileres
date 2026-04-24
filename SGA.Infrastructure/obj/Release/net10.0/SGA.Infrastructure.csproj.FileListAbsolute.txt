@@ -1,0 +1,12 @@
+C:\Users\JuanGuillen\Documents\Proyectos\SGA_Main\SGA.Infrastructure\bin\Release\net10.0\SGA.Infrastructure.deps.json
+C:\Users\JuanGuillen\Documents\Proyectos\SGA_Main\SGA.Infrastructure\bin\Release\net10.0\SGA.Infrastructure.dll
+C:\Users\JuanGuillen\Documents\Proyectos\SGA_Main\SGA.Infrastructure\bin\Release\net10.0\SGA.Infrastructure.pdb
+C:\Users\JuanGuillen\Documents\Proyectos\SGA_Main\SGA.Infrastructure\obj\Release\net10.0\SGA.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\JuanGuillen\Documents\Proyectos\SGA_Main\SGA.Infrastructure\obj\Release\net10.0\SGA.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\JuanGuillen\Documents\Proyectos\SGA_Main\SGA.Infrastructure\obj\Release\net10.0\SGA.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\JuanGuillen\Documents\Proyectos\SGA_Main\SGA.Infrastructure\obj\Release\net10.0\SGA.Infrastructure.AssemblyInfo.cs
+C:\Users\JuanGuillen\Documents\Proyectos\SGA_Main\SGA.Infrastructure\obj\Release\net10.0\SGA.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\JuanGuillen\Documents\Proyectos\SGA_Main\SGA.Infrastructure\obj\Release\net10.0\SGA.Infrastructure.dll
+C:\Users\JuanGuillen\Documents\Proyectos\SGA_Main\SGA.Infrastructure\obj\Release\net10.0\refint\SGA.Infrastructure.dll
+C:\Users\JuanGuillen\Documents\Proyectos\SGA_Main\SGA.Infrastructure\obj\Release\net10.0\SGA.Infrastructure.pdb
+C:\Users\JuanGuillen\Documents\Proyectos\SGA_Main\SGA.Infrastructure\obj\Release\net10.0\ref\SGA.Infrastructure.dll

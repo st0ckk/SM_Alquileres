@@ -1,0 +1,128 @@
+@model Usuario
+@{
+    ViewData["Title"] = "Iniciar Sesión";
+    Layout = "_LayoutExterno";
+}
+
+<div class="main-banner">
+    <div class="owl-carousel owl-banner">
+        <div class="item item-1">
+            <div class="header-text">
+                <span class="category">Sistema de Gestión, <em>Alquileres</em></span>
+                <h2>Bienvenido<br>Inicia Sesión en tu Cuenta</h2>
+            </div>
+        </div>
+        <div class="item item-2">
+            <div class="header-text">
+                <span class="category">Acceso Seguro, <em>Tu Portal</em></span>
+                <h2>Gestiona<br>Tus Propiedades Fácilmente</h2>
+            </div>
+        </div>
+        <div class="item item-3">
+            <div class="header-text">
+                <span class="category">Sistema Completo, <em>Alquileres</em></span>
+                <h2>¡Comienza Ahora!<br>Encuentra tu Propiedad Ideal</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="featured section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="left-image">
+                    <img src="~/images/featured.jpg" alt="">
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="section-heading">
+                    <h6>| Inicio de Sesión</h6>
+                    <h2>Accede a Tu Cuenta</h2>
+                </div>
+
+                @if (TempData["Success"] is not null)
+                {
+                    <div class="alert alert-success" role="alert">
+                        @TempData["Success"]
+                    </div>
+                }
+                @if (TempData["Warning"] is not null)
+                {
+                    <div class="alert alert-warning" role="alert">
+                        @TempData["Warning"]
+                    </div>
+                }
+
+                <form asp-controller="Home" asp-action="Login" class="custom-form contact-form sga-auth-card" role="form">
+                    <div class="row">
+                        <div class="col-lg-12 col-12">
+                            <div class="form-floating">
+                                <input type="email" asp-for="Email" class="form-control" placeholder="Email" required="">
+                                <label for="floatingInput">Email</label>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12 col-12">
+                            <div class="form-floating">
+                                <input type="password" asp-for="Contrasenna" class="form-control" placeholder="Contraseña" required="">
+                                <label for="floatingInput">Contraseña</label>
+                            </div>
+                        </div>
+
+                        @if (ViewBag.Error != null)
+                        {
+                            <div class="col-lg-12 col-12">
+                                <div class="alert alert-danger" role="alert">
+                                    @ViewBag.Error
+                                </div>
+                            </div>
+                        }
+
+                        <div class="col-lg-12 col-12">
+                            <button type="submit" class="form-control sga-btn-primary">Iniciar Sesión</button>
+                        </div>
+
+                        <div class="col-12 text-center mt-4">
+                            <a asp-controller="Home" asp-action="RecuperarContrasenna" class="btn custom-btn custom-border-btn ms-3 sga-link-muted">¿Olvidó su contraseña?</a>
+                        </div>
+                        <div class="col-12 text-center mt-2">
+                            <a asp-controller="Home" asp-action="Registro" class="btn custom-btn custom-border-btn ms-3 sga-link-muted sga-btn-orange-solid">Crear una cuenta de usuario</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="fun-facts">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="wrapper">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <div class="counter">
+                                <h2 class="timer count-title count-number" data-to='150' data-speed='1000'></h2>
+                                <p class="count-text">Propiedades<br>Disponibles</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="counter">
+                                <h2 class="timer count-title count-number" data-to='10' data-speed='1000'></h2>
+                                <p class="count-text">Años<br>de Experiencia</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="counter">
+                                <h2 class="timer count-title count-number" data-to='500' data-speed='1000'></h2>
+                                <p class="count-text">Clientes<br>Satisfechos</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

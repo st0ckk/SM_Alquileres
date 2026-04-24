@@ -1,0 +1,44 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "SGA_API | v1",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://localhost:7298"
+    },
+    {
+      "url": "http://localhost:5277"
+    }
+  ],
+  "paths": {
+    "/api/Personas/cedula/{cedula}": {
+      "get": {
+        "tags": [
+          "Personas"
+        ],
+        "parameters": [
+          {
+            "name": "cedula",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Personas"
+    }
+  ]
+}

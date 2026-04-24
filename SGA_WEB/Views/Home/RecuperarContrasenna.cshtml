@@ -1,0 +1,57 @@
+@model SGA_WEB.Models.RecuperarContrasennaInputModel
+@{
+    ViewData["Title"] = "Recuperar Contraseña";
+    Layout = "_LayoutExterno";
+}
+
+<div class="featured section sga-page-top">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="section-heading">
+                    <h6>| Acceso</h6>
+                    <h2>Recuperar Contraseña</h2>
+                </div>
+
+                @if (ViewBag.Error is not null)
+                {
+                    <div class="alert alert-danger">@ViewBag.Error</div>
+                }
+                @if (ViewBag.Success is not null)
+                {
+                    <div class="alert alert-success">@ViewBag.Success</div>
+                }
+
+                <form asp-controller="Home" asp-action="RecuperarContrasenna" method="post" class="p-4 sga-card-surface">
+                    @Html.AntiForgeryToken()
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Cedula" class="form-label"></label>
+                        <input asp-for="Cedula" id="cedula-input-recuperar" maxlength="11" class="form-control" placeholder="x-xxxx-xxxx" />
+                        <span asp-validation-for="Cedula" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="NuevaContrasenna" class="form-label"></label>
+                        <input asp-for="NuevaContrasenna" type="password" class="form-control" />
+                        <span asp-validation-for="NuevaContrasenna" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="ConfirmarNuevaContrasenna" class="form-label"></label>
+                        <input asp-for="ConfirmarNuevaContrasenna" type="password" class="form-control" />
+                        <span asp-validation-for="ConfirmarNuevaContrasenna" class="text-danger"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Restablecer contraseña</button>
+                    <a asp-controller="Home" asp-action="Login" class="btn btn-link">Volver a iniciar sesión</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/sga-cedula.js" asp-append-version="true"></script>
+}
